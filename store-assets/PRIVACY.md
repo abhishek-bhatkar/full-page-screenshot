@@ -1,68 +1,100 @@
 # Privacy Policy for Full Page Screenshot Extension
 
-## Our Permissions
+## Overview
+Full Page Screenshot is committed to protecting your privacy. This extension operates with minimal permissions and processes everything locally on your device. We collect NO data and require NO external services.
 
-This extension uses three minimal permissions:
+## Our Permissions Explained
 
-### 1. activeTab
-- **What it does**: Allows temporary access to the current tab only when you click the extension icon
-- **Why we need it**: To capture the content of your current tab for screenshots
-- **Limitations**: 
-  - Only activates when you click the extension
-  - Access is temporary
-  - Limited to the active tab only
+### 1. activeTab Permission
+- **Purpose**: Capture screenshots of your current tab
+- **When Used**: ONLY when you click the extension icon
+- **What We Access**: 
+  - Current tab's visible content
+  - Page scroll position
+  - Page dimensions
+- **What We Don't Access**:
+  - Other tabs
+  - Browsing history
+  - Personal information
 
-### 2. scripting
-- **What it does**: Allows us to inject the screenshot capture code
-- **Why we need it**: To scroll the page and capture the full content
-- **Limitations**:
-  - Only works with activeTab
+### 2. scripting Permission
+- **Purpose**: Enable full-page screenshot functionality
+- **When Used**: ONLY during screenshot capture
+- **What We Do**:
+  - Inject temporary capture code
+  - Measure page dimensions
+  - Handle page scrolling
+- **What We Don't Do**:
   - No persistent scripts
-  - No background monitoring
+  - No background operations
+  - No data collection
 
-### 3. downloads
-- **What it does**: Allows saving screenshots to your computer
-- **Why we need it**: To save your captured screenshots
-- **Limitations**:
-  - Only saves files you explicitly create
-  - You control where files are saved
+### 3. downloads Permission
+- **Purpose**: Save screenshots to your device
+- **When Used**: ONLY when you choose to save
+- **What We Do**:
+  - Save PNG/JPEG files locally
+  - Let you choose save location
+- **What We Don't Do**:
   - No automatic downloads
+  - No cloud uploads
+  - No file access beyond saving
 
-## What We Don't Do
-- We don't access any other tabs
-- We don't store or transmit any data
-- We don't track browsing history
-- We don't collect any personal information
-- We don't use persistent scripts
-- We don't run in the background
-- We don't access any websites without your action
+## Data Privacy
 
-## How It Works
-1. You click the extension icon
-2. We capture the current tab only
-3. We show you a preview
-4. You choose to save or cancel
-5. If saved, the file goes to your downloads
-6. All processing happens locally
+### Local Processing
+- All screenshot processing happens on your device
+- No data leaves your browser
+- No external servers involved
+- No cloud storage used
 
-## Data Usage
-- Screenshots are saved directly to your downloads
-- No data is retained by the extension
-- No cookies are created
-- No user data is collected
-- No analytics or tracking
-- No cloud storage or servers
+### Zero Data Collection
+- No personal information collected
+- No usage statistics gathered
+- No cookies created
+- No analytics implemented
+- No user tracking
+- No advertising
 
-## Privacy Commitment
-Our extension is designed with privacy-first principles:
-- Minimal permissions
-- Local processing only
-- User-initiated actions only
-- No data collection
-- No external connections
+### Technical Implementation
+1. Screenshots are captured locally using browser APIs
+2. Images are processed entirely in your browser
+3. Files are saved directly to your device
+4. All data is cleared when you close the preview
 
-## Contact
-If you have any questions about this privacy policy or our use of permissions, please contact us at [Your Contact Information].
+## Security Measures
+- Minimal permission model
+- No external dependencies
+- No network requests
+- No data storage
+- Code is open source and verifiable
 
-## Changes to This Policy
-We will update this privacy policy as needed to ensure it accurately reflects our practices and complies with Chrome Web Store requirements.
+## User Control
+You have complete control:
+- Extension only activates when clicked
+- Preview before saving
+- Choose save location
+- Select image format
+- No automatic operations
+
+## Updates & Changes
+- Privacy policy updates will be clearly communicated
+- Changes will maintain or enhance privacy
+- No new data collection will be introduced
+- Users will be notified of significant changes
+
+## Contact & Support
+For questions about privacy:
+- Open an issue on our GitHub repository
+- Email: privacy@fullpagescreenshot.com
+- Response within 48 hours
+
+## Commitment
+We are committed to:
+- Maintaining minimal permissions
+- Processing all data locally
+- Never collecting personal information
+- Being transparent about our practices
+- Protecting user privacy
+
+Last Updated: 2024-01-20
