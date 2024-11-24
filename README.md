@@ -1,52 +1,111 @@
-# Full Page Screenshot Capture
+# Full Page Screenshot Chrome Extension
 
-A Chrome extension that captures full-page screenshots with minimal permissions. Take screenshots of entire web pages, including scrollable content and iframes, with just one click.
+A lightweight Chrome extension that captures full-page screenshots with minimal permissions. Built with Chrome's Manifest V3, this extension provides a simple and efficient way to capture entire web pages.
 
 ## Features
 
-- Capture full-page screenshots with a single click
-- Keyboard shortcut support (Alt+Shift+P)
-- Export to PNG, JPEG, or PDF formats
-- Configurable image quality settings
-- Handles complex pages with scrollable elements and iframes
-- No unnecessary permissions required
-- Clean, bloat-free interface
+- **Full Page Capture**: Automatically scrolls and captures the entire webpage
+- **Multiple Export Options**:
+  - PNG (lossless quality)
+  - JPEG (95% quality)
+- **User-Friendly Interface**:
+  - Preview window before download
+  - Simple one-click download buttons
+  - Clean, modern design
 
 ## Installation
 
-1. Clone or download this repository
+1. Clone this repository:
+   ```bash
+   git clone [repository-url]
+   ```
+
 2. Open Chrome and navigate to `chrome://extensions/`
+
 3. Enable "Developer mode" in the top right corner
+
 4. Click "Load unpacked" and select the extension directory
 
 ## Usage
 
-1. Click the extension icon in your Chrome toolbar (or press Alt+Shift+P)
-2. Wait for the extension to capture the entire page
-3. When complete, a new tab will open with your screenshot
-4. Choose your preferred format (PNG, JPEG, or PDF) and download
+1. Navigate to any webpage you want to capture
 
-## Configuration
+2. Click the extension icon in your Chrome toolbar (or use keyboard shortcut)
+   - Windows/Linux: `Alt+Shift+P`
+   - macOS: `Command+Shift+S`
 
-Access the extension options by:
-1. Right-clicking the extension icon
-2. Select "Options"
-3. Configure:
-   - Default download format
-   - JPEG quality
-   - PDF paper size
+3. Allow screen capture permission when prompted
+
+4. Preview your screenshot in the popup window
+
+5. Choose your preferred download format:
+   - Click "Download PNG" for lossless quality
+   - Click "Download JPEG" for smaller file size
 
 ## Technical Details
 
-The extension uses Chrome's native APIs to capture the page content, requiring only the following permissions:
-- `activeTab`: To access the current tab for screenshot capture
-- `scripting`: To inject the capture script
-- `storage`: To save user preferences
+### Architecture
+- Built with Chrome Extension Manifest V3
+- Uses modern JavaScript features
+- Canvas-based screenshot generation
+- Message passing for component communication
+
+### Permissions
+- `activeTab`: For capturing the current tab
+- `scripting`: For content script injection
+- `storage`: For future settings support
+- `downloads`: For saving screenshots
+
+### Files Structure
+```
+├── manifest.json        # Extension configuration
+├── background.js       # Core screenshot logic
+├── content.js         # Browser context bridge
+├── screenshot.html    # Preview interface
+├── screenshot.js      # Download handling
+├── options.html      # Settings page
+├── options.js       # Settings logic
+└── icons/          # Extension icons
+```
+
+## Development
+
+### Prerequisites
+- Google Chrome Browser
+- Basic knowledge of JavaScript and Chrome Extension APIs
+
+### Local Development
+1. Make changes to the source files
+2. Reload the extension in `chrome://extensions/`
+3. Test your changes
+
+### Building for Production
+1. Update version in `manifest.json`
+2. Remove any development-only permissions
+3. Zip the extension directory
+4. Submit to Chrome Web Store
+
+## Security
+
+- Minimal permission requirements
+- No external dependencies
+- Data stays local to the user's machine
+- CSP-compliant code
 
 ## Contributing
 
-Found a bug or want to suggest a feature? Please open an issue or submit a pull request!
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
 ## License
 
-MIT License - feel free to use this code in your own projects!
+[Add your chosen license here]
+
+## Acknowledgments
+
+- Chrome Extension API Documentation
+- Canvas API Documentation
+- Chrome Extension Community

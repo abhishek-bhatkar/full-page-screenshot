@@ -1,49 +1,149 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Screenshot Preview</title>
-    <style>
-        body { 
-            margin: 0; 
-            background: #f0f0f0; 
-        }
-        .toolbar { 
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: #fff;
-            padding: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            gap: 10px;
-            z-index: 1000;
-        }
-        .screenshot {
-            margin-top: 60px;
-            max-width: 100%;
-            height: auto;
-        }
-        button {
-            padding: 8px 16px;
-            border: none;
-            background: #2196F3;
-            color: white;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        }
-        button:hover {
-            background: #1976D2;
-        }
-    </style>
+  <title>Screenshot Preview</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f5f5f5;
+    }
+    .toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      padding: 15px 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+    .container {
+      margin-top: 70px;
+      padding: 20px;
+    }
+    .preview-container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin: 0 auto;
+      max-width: 1200px;
+    }
+    #screenshot {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 140px;
+      justify-content: center;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .png-button {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .png-button:hover:not(:disabled) {
+      background-color: #45a049;
+      transform: translateY(-1px);
+    }
+    .jpeg-button {
+      background-color: #2196F3;
+      color: white;
+    }
+    .jpeg-button:hover:not(:disabled) {
+      background-color: #1e88e5;
+      transform: translateY(-1px);
+    }
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+    }
+    .error-message {
+      background-color: #ffebee;
+      color: #c62828;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px auto;
+      max-width: 1200px;
+      display: none;
+    }
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 20px;
+      z-index: 1000;
+      display: none;
+    }
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
-    <div class="toolbar">
-        <button id="pngButton">Download PNG</button>
-        <button id="jpegButton">Download JPEG</button>
+  <div class="toolbar">
+    <button id="pngButton" class="png-button">
+      <span class="button-text">Download PNG</span>
+      <span class="spinner" style="display: none;"></span>
+    </button>
+    <button id="jpegButton" class="jpeg-button">
+      <span class="button-text">Download JPEG</span>
+      <span class="spinner" style="display: none;"></span>
+    </button>
+  </div>
+  
+  <div class="container">
+    <div class="error-message" id="error-message"></div>
+    <div class="preview-container">
+      <img id="screenshot" alt="Screenshot preview">
     </div>
-    <img id="screenshotImage" class="screenshot">
-    <script src="screenshot.js"></script>
+  </div>
+
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-spinner"></div>
+    <p>Processing screenshot...</p>
+  </div>
+  <script src="screenshot.js"></script>
 </body>
 </html>
