@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Full Page Screenshot Capture",
   "version": "1.0",
-  "description": "Capture full page screenshots easily without extra permissions",
+  "description": "Capture full webpage screenshots with a single click. Simple, focused, and privacy-friendly.",
   "permissions": ["activeTab", "scripting", "downloads"],
   "action": {
     "default_icon": {
@@ -22,7 +22,7 @@
         "default": "Alt+Shift+P",
         "mac": "Command+Shift+S"
       },
-      "description": "Take a screenshot (Windows/Linux: Alt+Shift+P, macOS: ⌘⇧S)"
+      "description": "Take a screenshot"
     }
   },
   "background": {

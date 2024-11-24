@@ -1,48 +1,42 @@
 # Full Page Screenshot Capture
 
-Take full-page screenshots with minimal permissions and maximum privacy.
+A simple extension with a single purpose: capture full-page screenshots of any webpage.
 
 ## Short Description (132 characters)
-Capture full webpage screenshots easily. Privacy-focused, no data collection, works offline. Perfect for saving entire web pages.
+Capture full webpage screenshots with a single click. Simple, focused, and privacy-friendly.
 
 ## Detailed Description
-Full Page Screenshot Capture is a lightweight, privacy-focused Chrome extension that allows you to capture entire web pages with just one click. Built with user privacy in mind, it requires minimal permissions and works completely offline.
+Full Page Screenshot Capture does one thing and does it well: it captures complete, full-length screenshots of webpages. No extra features, no bloat - just reliable screenshot capture with maximum privacy.
 
-Key Features:
-• Capture full-length screenshots of any webpage
-• Works with dynamic and scrolling content
-• Save in PNG or JPEG format
-• Preview screenshots before saving
-• No data collection or tracking
-• Works offline - no internet required
-• Minimal permissions required
-• Privacy-focused design
+Single Purpose:
+✓ Capture full-page screenshots of any webpage
+That's it. No additional features, no distractions.
 
-Perfect for:
-✓ Saving articles for offline reading
-✓ Capturing research materials
-✓ Preserving web content
-✓ Creating documentation
-✓ Sharing webpage content
+How it works:
+1. Click the extension icon
+2. Wait for the capture
+3. Save your screenshot
+
+Format options:
+• PNG for highest quality
+• JPEG for smaller file size
 
 Privacy & Security:
-- No data collection or tracking
+- No data collection
 - All processing happens locally
-- Minimal required permissions
-- No external servers or APIs
-- Open source code
+- Minimal permissions
+- No external connections
 
-Required Permissions:
-• activeTab: Only used when you click the extension
-• scripting: Required for screenshot capture
-• downloads: For saving screenshots locally
+Required Permissions (only what's needed for screenshots):
+• activeTab: To capture the current webpage
+• scripting: For full-page capture
+• downloads: To save your screenshots
 
-This extension is perfect for users who want a simple, reliable way to capture full-page screenshots while maintaining their privacy and security.
+This extension is perfect for users who want a straightforward, reliable way to capture full-page screenshots without any unnecessary extras.
 
 ## Version Notes
 Version 1.0
 - Initial release
-- Full-page screenshot capability
-- PNG and JPEG export options
-- Privacy-focused implementation
-- Minimal permission requirements
+- Single purpose: full-page screenshot capture
+- Simple, focused functionality
+- Privacy-friendly implementation
