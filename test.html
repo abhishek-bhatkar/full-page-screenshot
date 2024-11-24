@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Screenshot Extension Test Page</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .scrollable-section {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            background: #f9f9f9;
+        }
+        h1 {
+            color: #2196F3;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #1976D2;
+            margin-top: 0;
+        }
+        .color-blocks {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .color-block {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        iframe {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #ddd;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Screenshot Extension Test Page</h1>
+        
+        <div class="section">
+            <h2>Test Section 1: Basic Content</h2>
+            <p>This is a basic paragraph to test text capture. The screenshot extension should capture all text clearly and maintain proper formatting.</p>
+        </div>
+
+        <div class="section">
+            <h2>Test Section 2: Colors</h2>
+            <div class="color-blocks">
+                <div class="color-block" style="background: #2196F3;">Blue</div>
+                <div class="color-block" style="background: #4CAF50;">Green</div>
+                <div class="color-block" style="background: #F44336;">Red</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Test Section 3: Scrollable Content</h2>
+            <div class="scrollable-section">
+                <p>This is a scrollable section to test how the extension handles overflow content.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <p>Additional content to ensure scrolling is necessary...</p>
+                <p>More content to test scrolling functionality...</p>
+                <p>Final line of scrollable content.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Test Section 4: Iframe Content</h2>
+            <iframe src="about:blank" srcdoc="<h2 style='color: #2196F3;'>Iframe Content</h2><p>This is content inside an iframe. The screenshot extension should capture this correctly.</p>"></iframe>
+        </div>
+
+        <div class="section">
+            <h2>Test Section 5: Long Content</h2>
+            <p>This section is to test how the extension handles very long pages.</p>
+            <div style="height: 1000px; background: linear-gradient(180deg, #2196F3, #1976D2);">
+                <div style="position: sticky; top: 50%; text-align: center; color: white; padding: 20px;">
+                    Sticky content in long scrollable area
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

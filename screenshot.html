@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Screenshot Preview</title>
+    <style>
+        body { 
+            margin: 0; 
+            background: #f0f0f0; 
+        }
+        .toolbar { 
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        .screenshot {
+            margin-top: 60px;
+            max-width: 100%;
+            height: auto;
+        }
+        button {
+            padding: 8px 16px;
+            border: none;
+            background: #2196F3;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <button id="pngButton">Download PNG</button>
+        <button id="jpegButton">Download JPEG</button>
+    </div>
+    <img id="screenshotImage" class="screenshot">
+    <script src="screenshot.js"></script>
+</body>
+</html>

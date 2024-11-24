@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Screenshot Extension Options</title>
+  <style>
+    body {
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #1976D2;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .option-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    select {
+      padding: 8px;
+      width: 200px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .save-button {
+      background: #2196F3;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .save-button:hover {
+      background: #1976D2;
+    }
+    #status {
+      margin-top: 10px;
+      color: #4CAF50;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Screenshot Options</h1>
+    
+    <div class="option-group">
+      <label for="defaultFormat">Default Download Format:</label>
+      <select id="defaultFormat">
+        <option value="png">PNG</option>
+        <option value="jpeg">JPEG</option>
+        <option value="pdf">PDF</option>
+      </select>
+    </div>
+
+    <div class="option-group">
+      <label for="jpegQuality">JPEG Quality (1-100):</label>
+      <select id="jpegQuality">
+        <option value="90">90 (Recommended)</option>
+        <option value="100">100 (Best)</option>
+        <option value="80">80 (Good)</option>
+        <option value="70">70 (Smaller file)</option>
+      </select>
+    </div>
+
+    <div class="option-group">
+      <label for="pdfFormat">PDF Paper Size:</label>
+      <select id="pdfFormat">
+        <option value="fit">Fit to Content</option>
+        <option value="a4">A4</option>
+        <option value="letter">Letter</option>
+      </select>
+    </div>
+
+    <button class="save-button" id="save">Save Options</button>
+    <div id="status"></div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

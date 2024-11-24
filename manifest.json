@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "Full Page Screenshot Capture",
+  "version": "1.0",
+  "description": "Capture full page screenshots easily without extra permissions",
+  "permissions": ["activeTab", "scripting", "storage", "downloads"],
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+P",
+        "mac": "Command+Shift+S"
+      },
+      "description": "Take a screenshot (Windows/Linux: Alt+Shift+P, macOS: ⌘⇧S)"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["screenshot.html", "screenshot.js", "content.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  }
+}
