@@ -58,14 +58,12 @@ A lightweight Chrome extension that captures full-page screenshots with minimal 
 
 ### Files Structure
 ```
-├── manifest.json        # Extension configuration
-├── background.js       # Core screenshot logic
-├── content.js         # Browser context bridge
-├── screenshot.html    # Preview interface
-├── screenshot.js      # Download handling
-├── options.html      # Settings page
-├── options.js       # Settings logic
-└── icons/          # Extension icons
+├── manifest.json     # Extension configuration
+├── background.js     # Core screenshot logic
+├── content.js        # Browser context bridge
+├── screenshot.html   # Preview interface
+├── screenshot.js     # Download handling
+└── icons/           # Extension icons
 ```
 
 ## Development
@@ -79,11 +77,11 @@ A lightweight Chrome extension that captures full-page screenshots with minimal 
 2. Reload the extension in `chrome://extensions/`
 3. Test your changes
 
-### Building for Production
-1. Update version in `manifest.json`
-2. Remove any development-only permissions
-3. Zip the extension directory
-4. Submit to Chrome Web Store
+### Building
+Run the package script to create a distribution zip:
+```bash
+./package.sh
+```
 
 ## Security
 
@@ -99,13 +97,3 @@ A lightweight Chrome extension that captures full-page screenshots with minimal 
 3. Commit your changes
 4. Push to the branch
 5. Open a Pull Request
-
-## License
-
-[Add your chosen license here]
-
-## Acknowledgments
-
-- Chrome Extension API Documentation
-- Canvas API Documentation
-- Chrome Extension Community

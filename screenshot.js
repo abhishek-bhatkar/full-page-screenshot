@@ -43,6 +43,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Get the screenshot data
     try {
         showLoading(true);
+
+        // Wait a bit for the background script to process the screenshot
+        await new Promise(resolve => setTimeout(resolve, 500));
+
         const response = await chrome.runtime.sendMessage({ type: 'getScreenshot' });
         if (!response || !response.imageURL) {
             throw new Error('Failed to load screenshot data');
@@ -96,14 +100,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             const time = new Date().toTimeString().split(' ')[0].replace(/:/g, '-');
             const filename = `screenshot_${date}_${time}.${format}`;
 
-            // Send download message to background script and wait for response
+            // Send download message to background script
             const response = await chrome.runtime.sendMessage({
                 type: 'download',
                 dataUrl: dataUrl,
                 filename: filename
             });
 
-            // Check response
             if (!response.success) {
                 throw new Error(response.error || 'Download failed');
             }
@@ -117,12 +120,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     // Add event listeners
-    if (pngButton) {
-        pngButton.addEventListener('click', () => handleDownload('png'));
-    }
-    if (jpegButton) {
-        jpegButton.addEventListener('click', () => handleDownload('jpeg', 0.95));
-    }
+    pngButton.addEventListener('click', () => handleDownload('png'));
+    jpegButton.addEventListener('click', () => handleDownload('jpeg', 0.95));
 
     // Handle image load error
     if (screenshot) {

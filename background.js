@@ -1,201 +1,215 @@
-// Store the screenshot data temporarily
-let currentScreenshot = null;
+// Function to inject and execute content script
+async function injectContentScript(tabId) {
+  await chrome.scripting.executeScript({
+    target: { tabId },
+    function: setupScreenshotCapture
+  });
+}
 
-// Listen for messages from the screenshot tab
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === 'download') {
-    try {
-      const { dataUrl, filename } = request;
-      // Use data URL directly with chrome.downloads
-      chrome.downloads.download({
-        url: dataUrl,
-        filename: filename,
-        saveAs: true
-      }, (downloadId) => {
-        if (chrome.runtime.lastError) {
-          console.error('Download error:', chrome.runtime.lastError);
-          sendResponse({ success: false, error: chrome.runtime.lastError.message });
-        } else {
-          sendResponse({ success: true, downloadId });
-        }
-      });
-    } catch (error) {
-      console.error('Download error:', error);
-      sendResponse({ success: false, error: error.message });
-    }
-    return true;
-  } else if (request.type === 'getScreenshot') {
-    try {
-      if (!currentScreenshot) {
-        sendResponse({ error: 'No screenshot data available' });
-        return true;
-      }
-      sendResponse({ imageURL: currentScreenshot });
-    } catch (error) {
-      console.error('Get screenshot error:', error);
-      sendResponse({ error: 'Failed to retrieve screenshot' });
-    }
-    return true;
-  } else if (request.type === 'openScreenshot') {
-    try {
-      currentScreenshot = request.imageURL;
-      chrome.windows.create({
-        url: chrome.runtime.getURL('screenshot.html'),
-        type: 'popup',
-        width: 1024,
-        height: 800
-      }, (window) => {
-        if (chrome.runtime.lastError) {
-          console.error('Window creation error:', chrome.runtime.lastError);
-        }
-      });
-    } catch (error) {
-      console.error('Open screenshot error:', error);
-    }
-    return true;
+// Content script functionality
+function setupScreenshotCapture() {
+  let totalHeight = 0;
+  let totalWidth = 0;
+  let viewportHeight = 0;
+  let viewportWidth = 0;
+  let canvas = null;
+  let ctx = null;
+
+  function getScrollMetrics() {
+    const body = document.body;
+    const html = document.documentElement;
+
+    totalHeight = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight
+    );
+
+    totalWidth = Math.max(
+      body.scrollWidth,
+      body.offsetWidth,
+      html.clientWidth,
+      html.scrollWidth,
+      html.offsetWidth
+    );
+
+    viewportHeight = window.innerHeight;
+    viewportWidth = window.innerWidth;
   }
-});
 
-chrome.action.onClicked.addListener(async (tab) => {
-  try {
-    // Reset any previous screenshot data
-    currentScreenshot = null;
-    
-    // Inject the content script to capture the full page
-    await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      function: captureFullPage,
-    });
-  } catch (err) {
-    console.error('Failed to execute screenshot capture:', err);
-    // Show error in popup if possible
-    chrome.windows.create({
-      url: chrome.runtime.getURL('error.html'),
-      type: 'popup',
-      width: 400,
-      height: 200
-    });
+  function scrollTo(x, y) {
+    window.scrollTo(x, y);
+    return new Promise(resolve => setTimeout(resolve, 150));
   }
-});
 
-async function captureFullPage() {
-  const body = document.body;
-  const html = document.documentElement;
-  
-  // Get the maximum scroll dimensions
-  const maxHeight = Math.max(
-    body.scrollHeight,
-    body.offsetHeight,
-    html.clientHeight,
-    html.scrollHeight,
-    html.offsetHeight
-  );
-  
-  const maxWidth = Math.max(
-    body.scrollWidth,
-    body.offsetWidth,
-    html.clientWidth,
-    html.scrollWidth,
-    html.offsetWidth
-  );
-
-  // Save original scroll position
-  const originalScrollPos = window.scrollY;
-  
-  // Create canvas
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = maxWidth;
-  canvas.height = maxHeight;
-
-  // Function to capture viewport
-  async function captureViewport() {
-    return new Promise((resolve, reject) => {
-      const video = document.createElement('video');
-      video.style.cssText = 'position:fixed;top:-10000px;left:-10000px;';
-      
-      video.oncanplay = async () => {
-        try {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
-          ctx.drawImage(video, 0, 0);
-          
-          // Stop all tracks to release the media stream
-          video.srcObject.getTracks().forEach(track => track.stop());
-          video.remove();
-          resolve(canvas);
-        } catch (error) {
-          reject(error);
-        }
-      };
-      
-      navigator.mediaDevices.getDisplayMedia({ 
+  async function captureVisibleTab() {
+    try {
+      const stream = await navigator.mediaDevices.getDisplayMedia({
         preferCurrentTab: true,
         video: {
-          width: maxWidth,
-          height: window.innerHeight
+          width: viewportWidth,
+          height: viewportHeight
         }
-      })
-      .then(stream => {
-        video.srcObject = stream;
-        video.play();
-      })
-      .catch(err => {
-        console.error('Error capturing screen:', err);
-        reject(err);
       });
-    });
+      
+      const video = document.createElement('video');
+      video.srcObject = stream;
+      
+      await new Promise(resolve => {
+        video.onloadedmetadata = () => {
+          video.play();
+          resolve();
+        };
+      });
+
+      const tempCanvas = document.createElement('canvas');
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCanvas.width = video.videoWidth;
+      tempCanvas.height = video.videoHeight;
+      tempCtx.drawImage(video, 0, 0);
+
+      stream.getTracks().forEach(track => track.stop());
+      
+      return tempCanvas;
+    } catch (error) {
+      console.error('Screenshot capture error:', error);
+      throw error;
+    }
   }
 
-  // Function to scroll and capture
-  async function scrollAndCapture() {
+  async function captureFullPage() {
     try {
-      const viewportHeight = window.innerHeight;
-      let yPosition = 0;
+      // Get page dimensions
+      getScrollMetrics();
 
-      // Request screen capture permission once at the start
-      const initialCapture = await captureViewport();
-      if (!initialCapture) {
-        throw new Error('Failed to get screen capture permission');
-      }
+      // Create canvas for the full page
+      canvas = document.createElement('canvas');
+      ctx = canvas.getContext('2d');
+      canvas.width = totalWidth;
+      canvas.height = totalHeight;
 
-      while (yPosition < maxHeight) {
-        window.scrollTo(0, yPosition);
-        
-        // Wait for any lazy-loaded content and animations
-        await new Promise(resolve => setTimeout(resolve, 150));
-        
-        const viewportCanvas = await captureViewport();
-        if (viewportCanvas) {
-          ctx.drawImage(viewportCanvas, 0, yPosition);
+      // Save original scroll position
+      const originalX = window.scrollX;
+      const originalY = window.scrollY;
+
+      // Calculate number of segments needed
+      const numSegmentsY = Math.ceil(totalHeight / viewportHeight);
+      const numSegmentsX = Math.ceil(totalWidth / viewportWidth);
+
+      // Capture each segment
+      for (let y = 0; y < numSegmentsY; y++) {
+        for (let x = 0; x < numSegmentsX; x++) {
+          // Scroll to the segment
+          const scrollX = x * viewportWidth;
+          const scrollY = y * viewportHeight;
+          await scrollTo(scrollX, scrollY);
+
+          // Wait for any dynamic content to load
+          await new Promise(resolve => setTimeout(resolve, 100));
+
+          // Capture the segment
+          const segmentCanvas = await captureVisibleTab();
+
+          // Calculate the actual size of this segment
+          const segmentWidth = Math.min(viewportWidth, totalWidth - scrollX);
+          const segmentHeight = Math.min(viewportHeight, totalHeight - scrollY);
+
+          // Draw the segment onto the main canvas
+          ctx.drawImage(
+            segmentCanvas,
+            0, 0, segmentWidth, segmentHeight,  // Source rectangle
+            scrollX, scrollY, segmentWidth, segmentHeight  // Destination rectangle
+          );
         }
-        
-        yPosition += viewportHeight;
       }
 
       // Restore original scroll position
-      window.scrollTo(0, originalScrollPos);
+      await scrollTo(originalX, originalY);
 
-      // Send message to background script to open screenshot
-      const imageURL = canvas.toDataURL('image/png');
+      // Convert the final canvas to data URL
+      const screenshot = canvas.toDataURL('image/png');
+
+      // Send the screenshot data back to the background script
       chrome.runtime.sendMessage({
-        type: 'openScreenshot',
-        imageURL: imageURL
+        type: 'screenshotCaptured',
+        imageURL: screenshot,
+        dimensions: {
+          width: totalWidth,
+          height: totalHeight
+        }
       });
+
     } catch (error) {
-      console.error('Capture error:', error);
-      throw error; // Re-throw to be caught by the main error handler
+      console.error('Full page capture error:', error);
+      chrome.runtime.sendMessage({
+        type: 'screenshotError',
+        error: error.message
+      });
     }
   }
 
-  scrollAndCapture().catch(error => {
-    console.error('Screenshot capture failed:', error);
-    // Notify user of error
-    chrome.runtime.sendMessage({
-      type: 'captureError',
-      error: error.message || 'Failed to capture screenshot'
-    });
-  });
+  // Start the capture process immediately
+  captureFullPage();
 }
+
+// Store the screenshot data temporarily
+let currentScreenshot = null;
+
+// Handle extension button click
+chrome.action.onClicked.addListener(async (tab) => {
+  try {
+    // Reset screenshot data
+    currentScreenshot = null;
+    
+    // Inject content script
+    await injectContentScript(tab.id);
+    
+  } catch (error) {
+    console.error('Extension error:', error);
+  }
+});
+
+// Handle messages from content script and screenshot page
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  switch (request.type) {
+    case 'screenshotCaptured':
+      // Store the screenshot data
+      currentScreenshot = request;
+      // Open the preview window
+      chrome.windows.create({
+        url: chrome.runtime.getURL('screenshot.html'),
+        type: 'popup',
+        width: 800,
+        height: 600
+      });
+      break;
+
+    case 'screenshotError':
+      console.error('Screenshot error:', request.error);
+      break;
+
+    case 'getScreenshot':
+      if (currentScreenshot) {
+        sendResponse(currentScreenshot);
+      } else {
+        sendResponse({ error: 'No screenshot data available' });
+      }
+      return true;
+
+    case 'download':
+      chrome.downloads.download({
+        url: request.dataUrl,
+        filename: request.filename,
+        saveAs: true
+      })
+      .then(downloadId => {
+        sendResponse({ success: true, downloadId });
+      })
+      .catch(error => {
+        sendResponse({ success: false, error: error.message });
+      });
+      return true;
+  }
+});

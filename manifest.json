@@ -3,7 +3,7 @@
   "name": "Full Page Screenshot Capture",
   "version": "1.0",
   "description": "Capture full page screenshots easily without extra permissions",
-  "permissions": ["activeTab", "scripting", "storage", "downloads"],
+  "permissions": ["activeTab", "scripting", "downloads"],
   "action": {
     "default_icon": {
       "16": "icons/icon16.png",
@@ -28,21 +28,10 @@
   "background": {
     "service_worker": "background.js"
   },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"],
-      "run_at": "document_start"
-    }
-  ],
   "web_accessible_resources": [
     {
-      "resources": ["screenshot.html", "screenshot.js", "content.js"],
-      "matches": ["<all_urls>"]
+      "resources": ["screenshot.html", "screenshot.js"],
+      "matches": ["chrome-extension://*/*"]
     }
-  ],
-  "options_ui": {
-    "page": "options.html",
-    "open_in_tab": false
-  }
+  ]
 }
