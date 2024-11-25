@@ -44,6 +44,24 @@ function setupScreenshotCapture() {
     return new Promise(resolve => setTimeout(resolve, 150));
   }
 
+  // Function to temporarily hide fixed elements
+  function handleFixedElements(hide = true) {
+    const fixedElements = Array.from(document.querySelectorAll('*')).filter(el => {
+      const style = window.getComputedStyle(el);
+      return style.position === 'fixed' || style.position === 'sticky';
+    });
+
+    fixedElements.forEach(el => {
+      if (hide) {
+        el.dataset.originalDisplay = el.style.display;
+        el.style.display = 'none';
+      } else {
+        el.style.display = el.dataset.originalDisplay || '';
+        delete el.dataset.originalDisplay;
+      }
+    });
+  }
+
   async function captureVisibleTab() {
     try {
       const stream = await navigator.mediaDevices.getDisplayMedia({
@@ -98,9 +116,17 @@ function setupScreenshotCapture() {
       const numSegmentsY = Math.ceil(totalHeight / viewportHeight);
       const numSegmentsX = Math.ceil(totalWidth / viewportWidth);
 
+      // Show fixed elements only for the first segment
+      let isFirstSegment = true;
+
       // Capture each segment
       for (let y = 0; y < numSegmentsY; y++) {
         for (let x = 0; x < numSegmentsX; x++) {
+          // Handle fixed elements
+          if (!isFirstSegment) {
+            handleFixedElements(true); // Hide fixed elements
+          }
+
           // Scroll to the segment
           const scrollX = x * viewportWidth;
           const scrollY = y * viewportHeight;
@@ -122,11 +148,21 @@ function setupScreenshotCapture() {
             0, 0, segmentWidth, segmentHeight,  // Source rectangle
             scrollX, scrollY, segmentWidth, segmentHeight  // Destination rectangle
           );
+
+          // Restore fixed elements
+          if (!isFirstSegment) {
+            handleFixedElements(false); // Show fixed elements
+          }
+
+          isFirstSegment = false;
         }
       }
 
       // Restore original scroll position
       await scrollTo(originalX, originalY);
+
+      // Ensure all fixed elements are restored
+      handleFixedElements(false);
 
       // Convert the final canvas to data URL
       const screenshot = canvas.toDataURL('image/png');
@@ -143,6 +179,8 @@ function setupScreenshotCapture() {
 
     } catch (error) {
       console.error('Full page capture error:', error);
+      // Ensure fixed elements are restored even if there's an error
+      handleFixedElements(false);
       chrome.runtime.sendMessage({
         type: 'screenshotError',
         error: error.message
