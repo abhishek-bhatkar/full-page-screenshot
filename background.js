@@ -121,33 +121,50 @@ function setupScreenshotCapture() {
 
       // Capture each segment
       for (let y = 0; y < numSegmentsY; y++) {
+        const isLastVerticalSegment = y === numSegmentsY - 1;
         for (let x = 0; x < numSegmentsX; x++) {
           // Handle fixed elements
           if (!isFirstSegment) {
             handleFixedElements(true); // Hide fixed elements
           }
 
+          // Calculate scroll positions
+          let scrollX = x * viewportWidth;
+          let scrollY = y * viewportHeight;
+
+          // Adjust scroll position for last segment to ensure we capture everything
+          if (isLastVerticalSegment) {
+            scrollY = totalHeight - viewportHeight;
+          }
+
           // Scroll to the segment
-          const scrollX = x * viewportWidth;
-          const scrollY = y * viewportHeight;
           await scrollTo(scrollX, scrollY);
 
-          // Wait for any dynamic content to load
-          await new Promise(resolve => setTimeout(resolve, 100));
+          // Wait longer for any dynamic content and scrolling to settle
+          await new Promise(resolve => setTimeout(resolve, 250));
 
           // Capture the segment
           const segmentCanvas = await captureVisibleTab();
 
+          // Wait for the capture to complete
+          await new Promise(resolve => setTimeout(resolve, 100));
+
           // Calculate the actual size of this segment
           const segmentWidth = Math.min(viewportWidth, totalWidth - scrollX);
-          const segmentHeight = Math.min(viewportHeight, totalHeight - scrollY);
+          const segmentHeight = Math.min(viewportHeight, totalHeight - (y * viewportHeight));
+
+          // For the last vertical segment, adjust the source rectangle
+          const sourceY = isLastVerticalSegment ? viewportHeight - segmentHeight : 0;
 
           // Draw the segment onto the main canvas
           ctx.drawImage(
             segmentCanvas,
-            0, 0, segmentWidth, segmentHeight,  // Source rectangle
-            scrollX, scrollY, segmentWidth, segmentHeight  // Destination rectangle
+            0, sourceY, segmentWidth, segmentHeight,  // Source rectangle
+            scrollX, y * viewportHeight, segmentWidth, segmentHeight  // Destination rectangle
           );
+
+          // Wait for the drawing to complete
+          await new Promise(resolve => requestAnimationFrame(resolve));
 
           // Restore fixed elements
           if (!isFirstSegment) {

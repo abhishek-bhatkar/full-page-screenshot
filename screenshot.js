@@ -55,6 +55,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Set up image load handler
         screenshot.onload = () => {
             showLoading(false);
+            // Ensure the image is properly sized
+            if (response.dimensions) {
+                screenshot.style.width = '100%';
+                screenshot.style.height = 'auto';
+                const container = document.querySelector('.preview-container');
+                container.style.width = '100%';
+                container.style.maxWidth = '1200px';
+                container.style.overflowX = 'auto';
+            }
         };
         
         screenshot.onerror = () => {
