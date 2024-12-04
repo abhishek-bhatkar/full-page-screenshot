@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Full Page Screenshot Capture",
-  "version": "1.0",
+  "version": "1.0.1",
   "description": "Capture full webpage screenshots with a single click. Simple, focused, and privacy-friendly.",
   "permissions": ["activeTab", "scripting", "downloads"],
   "action": {
